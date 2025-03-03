@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #2c3e50; /* Matches calculator color */
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+    }
+    .calculator {
+      background: #2c3e50;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+      width: 300px; /* Fixed width for better alignment */
+    }
+    .display {
+      width: 100%;
+      height: 60px;
+      background: #34495e;
+      color: #fff;
+      text-align: right;
+      padding: 10px;
+      font-size: 24px;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.2);
+      transition: color 0.3s ease; /* Smooth transition for text color */
+    }
+    .display:focus {
+      outline: none;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+      gap: 10px; /* Space between buttons */
+    }
+    .buttons button {
+      padding: 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #3498db;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.1s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .buttons button:hover {
+      background: #2980b9;
+    }
+    .buttons button:active {
+      transform: scale(0.95); /* Slight scale effect on click */
+    }
+    .buttons button.operator {
+      background: #e67e22;
+    }
+    .buttons button.operator:hover {
+      background: #d35400;
+    }
+    .buttons button.equal {
+      background: #2ecc71;
+      grid-column: span 2; /* Span 2 columns for the equal button */
+    }
+    .buttons button.equal:hover {
+      background: #27ae60;
+    }
+    .buttons button.zero {
+      grid-column: span 2; /* Span 2 columns for the zero button */
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" id="display" class="display" disabled>
+    <div class="buttons">
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="appendToDisplay('/')" class="operator">/</button>
+      <button onclick="appendToDisplay('*')" class="operator">*</button>
+      <button onclick="deleteLast()">DEL</button>
+      <button onclick="appendToDisplay('7')">7</button>
+      <button onclick="appendToDisplay('8')">8</button>
+      <button onclick="appendToDisplay('9')">9</button>
+      <button onclick="appendToDisplay('-')" class="operator">-</button>
+      <button onclick="appendToDisplay('4')">4</button>
+      <button onclick="appendToDisplay('5')">5</button>
+      <button onclick="appendToDisplay('6')">6</button>
+      <button onclick="appendToDisplay('+')" class="operator">+</button>
+      <button onclick="appendToDisplay('1')">1</button>
+      <button onclick="appendToDisplay('2')">2</button>
+      <button onclick="appendToDisplay('3')">3</button>
+      <button onclick="calculate()" class="equal">=</button>
+      <button onclick="appendToDisplay('0')" class="zero">0</button>
+      <button onclick="appendToDisplay('.')">.</button>
+    </div>
+  </div>
+
+  <script>
+    // Function to append input to the display
+    function appendToDisplay(value) {
+      const display = document.getElementById('display');
+      display.value += value;
+      display.style.color = '#fff'; // Reset text color
+    }
+
+    // Function to clear the display
+    function clearDisplay() {
+      const display = document.getElementById('display');
+      display.value = '';
+      display.style.color = '#fff'; // Reset text color
+    }
+
+    // Function to delete the last character
+    function deleteLast() {
+      const display = document.getElementById('display');
+      display.value = display.value.slice(0, -1);
+      display.style.color = '#fff'; // Reset text color
+    }
+
+    // Function to calculate the result
+    function calculate() {
+      const display = document.getElementById('display');
+      try {
+        const result = eval(display.value);
+        display.value = result;
+        display.style.color = '#2ecc71'; // Green color for result
+      } catch (error) {
+        display.value = 'Error';
+        display.style.color = '#e74c3c'; // Red color for error
+      }
+    }
+
+    // Keyboard event listener
+    document.addEventListener('keydown', function (event) {
+      const key = event.key;
+
+      // Numbers (0-9)
+      if (/[0-9]/.test(key)) {
+        appendToDisplay(key);
+      }
+      // Operators (+, -, *, /)
+      else if (['+', '-', '*', '/'].includes(key)) {
+        appendToDisplay(key);
+      }
+      // Decimal point
+      else if (key === '.') {
+        appendToDisplay('.');
+      }
+      // Enter key (=)
+      else if (key === 'Enter') {
+        calculate();
+      }
+      // Backspace key (DEL)
+      else if (key === 'Backspace') {
+        deleteLast();
+      }
+      // Escape key (Clear)
+      else if (key === 'Escape') {
+        clearDisplay();
+      }
+    });
+  </script>
+</body>
+</html>
